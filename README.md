@@ -58,5 +58,5 @@ As such missconfiguration in the project never can spread outside of this projec
 1. Configure create a new repo or folder accordign to your terraform setup that allow the trigger o seperate terraform pipelines. 
 2. Create a new copy of the main.tf file form the original project setup. No need to make any changes
 3. Create a Configuration.auto.tfvars from the example the setup folder named `config_new_project.txt´
-4. Poopulate the configuration in accordance with the description.
+4. Populate the configuration in accordance with the description.
 5. Run your terraform pipelien against this configuration using the same seting as in the admin config.
