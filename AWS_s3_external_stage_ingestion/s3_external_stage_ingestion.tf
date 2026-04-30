@@ -39,6 +39,8 @@ resource "snowflake_grant_privileges_to_account_role" "snowflake_external_stage_
       in_schema          = "SOURCE_${each.value.source}.LANDING"
     }
   }
+
+ depends_on = [snowflake_stage.S3_ingestion_stage]
 }
 
 resource "snowflake_grant_privileges_to_account_role" "snowflake_external_stage_usage_future" {
@@ -53,6 +55,8 @@ resource "snowflake_grant_privileges_to_account_role" "snowflake_external_stage_
       in_schema          = "SOURCE_${each.value.source}.LANDING"
     }
   }
+ depends_on = [snowflake_stage.S3_ingestion_stage]
+
 }
 
 resource "snowflake_grant_privileges_to_account_role" "snowflake_external_stage_select_all" {

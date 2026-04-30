@@ -1,0 +1,86 @@
+project_name          = "" # Name of instance of module, must be uniqe per account
+snowflake_admin_setup = true
+
+
+project_credit_quota     = 10
+project_dev_credit_quota = 10
+notify_user              = []
+monitor_start            = "2025-05-10 00:00" # set to date in the future
+
+snowflake_permifrost_enabled           = true
+snowflake_central_data_products_setup  = true
+snowflake_central_internal_share_setup = false
+
+
+snowflake_sso_integration = false
+snowflake_okta_sso_setup  = false
+# snowflake_acs_url         = "https://<org>-<account>.snowflakecomputing.com/fed/login" # IF SSO is used
+# snowflake_issuer_url      = "https://<org>-<account>.snowflakecomputing.com" # IF SSO is used
+# sso_url                   = ""# IF SSO is used
+# sso_idp_entity_id         = ""# IF SSO is used
+
+
+snowflake_powerbi_enabled       = false
+snowflake_powerbi_oauth         = false
+snowflake_powerbi_issuer        = ""
+snowflake_powerbi_allowed_roles = [""]
+
+
+snowflake_aws_s3_integration      = true # If AWS external stage module is used
+snowflake_aws_s3_integration_role = "" # ARN for AWS iam role for external stage
+
+snowflake_dbt_enabled          = false
+snowflake_dbt_cloud_setup      = false
+dbt_oauth_issue_refresh_tokens = 7770
+dbt_cloud_uri                  = "https://<dbt account id>.eu1.dbt.com/complete/snowflake"
+
+##############
+## Databses ##
+#############
+
+default_dds_retention_time      = 2
+snowflake_prod_source_databases = []
+snowflake_dev_source_databases  = []
+snowflake_delivery_databases    = []
+snowflake_extra_databases = []
+################
+## Warehouses ##
+################
+
+snowflake_data_loader = []
+
+snowflake_prod_transformer = []
+
+snowflake_dev_transformer = []
+
+
+snowflake_extra_warehouses = [
+  ]
+
+
+
+###########
+## Roles ##
+###########
+
+snowflake_additional_roles = [
+
+]
+
+
+snowflake_schema_role_read = []
+
+
+snowfake_outgoing_share = []
+
+################# 
+## SYSTEM USER ##
+#################
+
+snowflake_sys_user = [
+]
+
+snowflake_custom_sysuser = [
+]
+
+

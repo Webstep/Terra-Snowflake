@@ -1,0 +1,156 @@
+terraform {
+  required_providers {
+    snowflake = {
+      source  = "snowflakedb/snowflake"
+      version = "2.7.0"
+    }
+    aws = {
+      source  = "hashicorp/aws"
+      version = "~> 5.0"
+    }
+  }
+  backend "s3" {
+    bucket         = "" # bucket name for state file
+    key            = "" # filename for the state file. needs to be uniqe per state file
+    region         = "eu-west-1"
+    dynamodb_table = "" # name of dynamodb_table used for state lock
+    encrypt        = true
+  }
+}
+provider "aws" {}
+
+data "aws_secretsmanager_secret" "snowflake_cred" {
+  name = "" # Name of AWS secret for Sowflake credentials
+}
+
+data "aws_secretsmanager_secret_version" "snowflake_admin_credentials" {
+  secret_id = data.aws_secretsmanager_secret.snowflake_cred.id
+}
+
+
+data "aws_secretsmanager_secret" "permifrost_cred" {
+  name = "" # name of AWS secret containing Permifrost public key
+}
+
+data "aws_secretsmanager_secret_version" "permifrost_credentials" {
+  secret_id = data.aws_secretsmanager_secret.permifrost_cred.id
+}
+provider "snowflake" {
+  alias             = "sysadmin"
+  organization_name = ""     # required if not using profile. Can also be set via SNOWFLAKE_ORGANIZATION_NAME env var
+  account_name      = ""       # required if not using profile. Can also be set via SNOWFLAKE_ACCOUNT_NAME env var
+  user              = "SYS_TERRAFORM" # required if not using profile or token. Can also be set via SNOWFLAKE_USER env var
+  authenticator     = "SNOWFLAKE_JWT"
+  private_key       = base64decode(jsondecode(data.aws_secretsmanager_secret_version.snowflake_admin_credentials.secret_string)["snowflake_auth_private"])
+  // optional
+  role = "SYSADMIN"
+}
+
+provider "snowflake" {
+  alias             = "useradmin"
+  organization_name = ""     # required if not using profile. Can also be set via SNOWFLAKE_ORGANIZATION_NAME env var
+  account_name      = ""       # required if not using profile. Can also be set via SNOWFLAKE_ACCOUNT_NAME env var
+  user              = "SYS_TERRAFORM" # required if not using profile or token. Can also be set via SNOWFLAKE_USER env var
+  authenticator     = "SNOWFLAKE_JWT"
+  private_key       = base64decode(jsondecode(data.aws_secretsmanager_secret_version.snowflake_admin_credentials.secret_string)["snowflake_auth_private"])
+  // optional
+  role = "USERADMIN"
+  params = {
+    QUOTED_IDENTIFIERS_IGNORE_CASE = true
+  }
+}
+
+
+provider "snowflake" {
+  alias             = "securityadmin"
+  organization_name = ""     # required if not using profile. Can also be set via SNOWFLAKE_ORGANIZATION_NAME env var
+  account_name      = ""       # required if not using profile. Can also be set via SNOWFLAKE_ACCOUNT_NAME env var
+  user              = "SYS_TERRAFORM" # required if not using profile or token. Can also be set via SNOWFLAKE_USER env var
+  authenticator     = "SNOWFLAKE_JWT"
+  private_key       = base64decode(jsondecode(data.aws_secretsmanager_secret_version.snowflake_admin_credentials.secret_string)["snowflake_auth_private"])
+  // optional
+
+  role = "SECURITYADMIN"
+  params = {
+    QUOTED_IDENTIFIERS_IGNORE_CASE = true
+  }
+}
+
+provider "snowflake" {
+  alias             = "accountadmin"
+  organization_name = ""     # required if not using profile. Can also be set via SNOWFLAKE_ORGANIZATION_NAME env var
+  account_name      = ""       # required if not using profile. Can also be set via SNOWFLAKE_ACCOUNT_NAME env var
+  user              = "SYS_TERRAFORM" # required if not using profile or token. Can also be set via SNOWFLAKE_USER env var
+  authenticator     = "SNOWFLAKE_JWT"
+  private_key       = base64decode(jsondecode(data.aws_secretsmanager_secret_version.snowflake_admin_credentials.secret_string)["snowflake_auth_private"])
+  // optional
+  role = "ACCOUNTADMIN"
+  params = {
+    QUOTED_IDENTIFIERS_IGNORE_CASE = true
+  }
+  preview_features_enabled = ["snowflake_storage_integration_resource", "snowflake_share_resource"]
+}
+
+
+
+module "terra_snowflake_base" {
+  source = "git:github.com/Webstep/terra-snowflake/base?ref=main"
+  providers = {
+    snowflake.sysadmin      = snowflake.sysadmin
+    snowflake.useradmin     = snowflake.useradmin
+    snowflake.securityadmin = snowflake.securityadmin
+    snowflake.accountadmin  = snowflake.accountadmin
+  }
+  project_name               = var.project_name
+  default_dds_retention_time = var.default_dds_retention_time
+
+  project_credit_quota     = var.project_credit_quota
+  project_dev_credit_quota = var.project_dev_credit_quota
+  notify_user              = var.notify_user
+  monitor_start            = var.monitor_start
+
+  snowflake_aws_s3_integration_role = var.snowflake_aws_s3_integration_role
+  snowflake_aws_s3_integration      = var.snowflake_aws_s3_integration
+
+  snowflake_sso_integration = var.snowflake_sso_integration
+  snowflake_okta_sso_setup  = var.snowflake_okta_sso_setup
+  sso_idp_entity_id         = var.sso_idp_entity_id
+  sso_url                   = var.sso_url
+  saml2_x509_cert           = data.aws_secretsmanager_secret_version.okta_credentials.secret_string
+
+  snowflake_powerbi_enabled       = var.snowflake_powerbi_enabled
+  snowflake_powerbi_oauth         = var.snowflake_powerbi_oauth
+  snowflake_powerbi_issuer        = var.snowflake_powerbi_issuer
+  snowflake_powerbi_allowed_roles = var.snowflake_powerbi_allowed_roles
+
+  snowflake_dbt_enabled          = var.snowflake_dbt_enabled
+  snowflake_dbt_cloud_setup      = var.snowflake_dbt_cloud_setup
+  dbt_cloud_uri                  = var.dbt_cloud_uri
+  dbt_oauth_issue_refresh_tokens = var.dbt_oauth_issue_refresh_tokens
+
+  snowflake_prefect_enabled              = var.snowflake_prefect_enabled
+  snowflake_permifrost_enabled           = var.snowflake_permifrost_enabled
+  PERMIFROST_KEY                         = base64decode(jsondecode(data.aws_secretsmanager_secret_version.permifrost_credentials.secret_string)["permifrost_auth_public"])
+  snowflake_admin_setup                  = var.snowflake_admin_setup
+  snowflake_central_data_products_setup  = var.snowflake_central_data_products_setup
+  snowflake_central_internal_share_setup = var.snowflake_central_internal_share_setup
+
+  snowflake_prod_source_databases = var.snowflake_prod_source_databases
+  snowflake_dev_source_databases  = var.snowflake_dev_source_databases
+  snowflake_delivery_databases    = var.snowflake_delivery_databases
+  snowflake_extra_databases = var.snowflake_extra_databases
+
+  snowflake_data_loader      = var.snowflake_data_loader
+  snowflake_prod_transformer = var.snowflake_prod_transformer
+  snowflake_dev_transformer  = var.snowflake_dev_transformer
+  snowflake_extra_warehouses = var.snowflake_extra_warehouses
+
+  snowflake_additional_roles = var.snowflake_additional_roles
+  snowflake_schema_role_read = var.snowflake_schema_role_read
+
+  snowfake_outgoing_share = var.snowfake_outgoing_share
+
+  snowflake_sys_user = var.snowflake_sys_user
+  snowflake_custom_sysuser = var.snowflake_custom_sysuser
+
+}

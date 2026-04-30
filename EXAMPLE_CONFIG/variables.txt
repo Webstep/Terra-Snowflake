@@ -1,3 +1,4 @@
+
 #######################
 ## Procject settings ##
 #######################
@@ -62,7 +63,7 @@ variable "monitor_start" {
 variable "snowflake_sso_integration" {
   description = "If you are using a SSP integration set this variable to true, if it is false, additional roles and objects are created, that normally would be managed by the SSO integration."
   type        = bool
-  default     = false
+  default     = true
 }
 variable "snowflake_okta_sso_setup" {
   description = "set to true, if you are using OKTA as you IDP"
@@ -157,8 +158,10 @@ variable "PERMIFROST_KEY" {
   description = "The path to the public key assigned to the Permifrost user for access controll. This is set as an enviroment variable"
   type        = string
   sensitive   = true
+  default     = "Disabled"
 
 }
+
 variable "snowflake_aws_s3_integration" {
   description = "Use a single database that acts as a presentation layer"
   type        = bool
@@ -166,6 +169,17 @@ variable "snowflake_aws_s3_integration" {
   default = false
 }
 
+variable "snowflake_custom_external_oauth_integration" {
+type = list(object({
+    name                 = string
+external_oauth_audience_list = list(string)
+external_oauth_issuer = string
+external_oauth_rsa_public_key = string
+
+  }))
+  default = []
+
+}
 ##################
 ## Integrations ##
 ##################
@@ -192,18 +206,6 @@ variable "snowflake_powerbi_allowed_roles" {
   default     = []
 }
 
-variable "snowflake_custom_external_oauth_integration" {
-type = list(object({
-    name                 = string
-external_oauth_audience_list = list(string)
-external_oauth_issuer = string
-external_oauth_rsa_public_key = string
-
-  }))
-  default = []
-
-}
-
 ####################
 ## DBT CLOUD setuo ##
 #####################
@@ -223,6 +225,7 @@ variable "dbt_cloud_uri" {
 variable "dbt_oauth_issue_refresh_tokens" {
   description = "The retention time for data within the defaul domain data store"
   type        = number
+  default     = 0
 }
 
 ########################
@@ -242,6 +245,7 @@ variable "snowflake_prod_source_databases" {
   type = list(object({
     name                 = string
     data_retention_days  = string
+    clone_frequency_cron = string
     project_tag          = string
   }))
   default = []
@@ -369,9 +373,11 @@ variable "snowflake_additional_roles" {
   default     = []
 }
 
+
 ############
 ## SHARES ## 
 ############
+
 
 variable "snowfake_outgoing_share" {
   type = list(object({
@@ -384,13 +390,6 @@ variable "snowfake_outgoing_share" {
 ##################
 ## SYSTEM USERS ##
 ##################
-
-variable "dbt_sys_pub_key" {
-  type        = string
-  sensitive   = true
-  description = "String containing the public key for the DBT system user"
-  default     = ""
-}
 
 variable "snowflake_sys_user" {
   description = "Dedicated system users that are not attached to dedicated processes."
@@ -410,3 +409,4 @@ variable "snowflake_custom_sysuser" {
     }))
    default =   []
 }
+

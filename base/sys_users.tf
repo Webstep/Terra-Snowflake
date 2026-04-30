@@ -73,7 +73,7 @@ resource "snowflake_service_user" "snowflake_service_users" {
 
 resource "snowflake_service_user" "Custom_sys_users" {
   provider          = snowflake.useradmin
-  for_each          = { for user in var.snowflake_custom_sysuser : user.name => name }
+  for_each          = { for user in var.snowflake_custom_sysuser : user.name => user }
   name              = each.value.name
   login_name        = each.value.name
   comment           = "system user for data loading"
