@@ -1,9 +1,9 @@
 #######################
-## Procject settings ##
+## Project settings ##
 #######################
 
-#   These variables configure cetntral concepts of the project holding the state file.
-#   They determin the behaviour of the module at a project level settings.
+#   These variables configure central concepts of the project holding the state file.
+#   They determine the behaviour of the module at a project level settings.
 
 
 variable "project_name" {
@@ -11,21 +11,21 @@ variable "project_name" {
   default     = "my-project"
 }
 variable "snowflake_dbt_enabled" {
-  description = "Are you using DBT to manage the data platform, enabeling this variable creates a project SYS_DBT user"
+  description = "Are you using DBT to manage the data platform, enabling this variable creates a project SYS_DBT user"
   type        = bool
 
   default = false
 }
 
 variable "snowflake_prefect_enabled" {
-  description = "If you are using Prefect to perform grand orchestration, enabeling this creates the system user for Prefect"
+  description = "If you are using Prefect to perform grand orchestration, enabling this creates the system user for Prefect"
   type        = bool
 
   default = false
 }
 
 variable "snowflake_powerbi_enabled" {
-  description = "If you need a system PowerBI user, enabeling this variable creates this user for the given project"
+  description = "If you need a system PowerBI user, enabling this variable creates this user for the given project"
   type        = bool
 
   default = false
@@ -45,7 +45,7 @@ variable "project_dev_credit_quota" {
   default = 3000
 }
 variable "notify_user" {
-  description = "The username of the user to recive notifications for resource monitoring"
+  description = "The username of the user to receive notifications for resource monitoring"
   type        = list(string)
   default     = [""]
 }
@@ -109,14 +109,14 @@ variable "snowflake_issuer_url" {
 #########################
 
 #   This configuration is set only once per account.
-#   The settings in this block relates to acount wide settings that are needed for the 
+#   The settings in this block relates to account wide settings that are needed for the
 #   module to function correctly.
 #   As such these variables need to be enabled on the first project to be configured on a given
-#   account. Thus making it the andmin project.
+#   account. Thus making it the admin project.
 
 
 variable "snowflake_admin_setup" {
-  description = "Is this the admin project for the snowflake account, holding the inital central objects"
+  description = "Is this the admin project for the snowflake account, holding the initial central objects"
   type        = bool
 
   default = false
@@ -142,19 +142,19 @@ variable "snowflake_central_data_products_setup" {
   default = false
 }
 variable "snowflake_project_data_products_setup" {
-  description = "Use a database per procjet as the presentation layer"
+  description = "Use a database per project as the presentation layer"
   type        = bool
 
   default = false
 }
 variable "snowflake_permifrost_enabled" {
-  description = "Wheter to create users roles and grants to manage permissions with Permifrost"
+  description = "Whether to create users roles and grants to manage permissions with Permifrost"
   type        = bool
 
   default = false
 }
 variable "PERMIFROST_KEY" {
-  description = "The path to the public key assigned to the Permifrost user for access controll. This is set as an enviroment variable"
+  description = "The path to the public key assigned to the Permifrost user for access control. This is set as an environment variable"
   type        = string
   sensitive   = true
 
@@ -183,7 +183,7 @@ variable "snowflake_powerbi_oauth" {
 }
 variable "snowflake_powerbi_issuer" {
   type        = string
-  description = "This variagle holds the issuer string for the entraId IdP"
+  description = "This variable holds the issuer string for the entraId IdP"
   default     = ""
 }
 variable "snowflake_powerbi_allowed_roles" {
@@ -209,7 +209,7 @@ external_oauth_rsa_public_key = string
 #####################
 
 variable "snowflake_dbt_cloud_setup" {
-  description = "Is this the admin project for the snowflake account, holding the inital central objects"
+  description = "Is this the admin project for the snowflake account, holding the initial central objects"
   type        = bool
 
   default = false
@@ -221,7 +221,7 @@ variable "dbt_cloud_uri" {
 }
 
 variable "dbt_oauth_issue_refresh_tokens" {
-  description = "The retention time for data within the defaul domain data store"
+  description = "The retention time for data within the default domain data store"
   type        = number
 }
 
@@ -234,11 +234,11 @@ variable "dbt_oauth_issue_refresh_tokens" {
 #   the RBAC system as will.
 
 variable "default_dds_retention_time" {
-  description = "The retention time for data within the defaul domain data store"
+  description = "The retention time for data within the default domain data store"
   type        = number
 }
 variable "snowflake_prod_source_databases" {
-  description = "Databases that only have an ingestion process to Production. This database will also be cloned to the DEV enviroment at the given frequency."
+  description = "Databases that only have an ingestion process to Production. This database will also be cloned to the DEV environment at the given frequency."
   type = list(object({
     name                 = string
     data_retention_days  = string
@@ -259,7 +259,7 @@ variable "snowflake_dev_source_databases" {
 }
 
 variable "snowflake_delivery_databases" {
-  description = "Contains a list of additional Domain databases that are linked to the particular project. Here the full name needs to be given, as there is no automation on naming. This also creatyes both Dev and Pros databases."
+  description = "Contains a list of additional Domain databases that are linked to the particular project. Here the full name needs to be given, as there is no automation on naming. This also creates both Dev and Pros databases."
   type = list(object({
     name                = string
     data_retention_days = string
@@ -270,7 +270,7 @@ variable "snowflake_delivery_databases" {
 }
 
 variable "snowflake_extra_databases" {
-  description = "Contains a list of additional Domain databases that are linked to the particular project. Here the full name needs to be given, as there is no automation on naming. This also creatyes both Dev and Pros databases."
+  description = "Contains a list of additional Domain databases that are linked to the particular project. Here the full name needs to be given, as there is no automation on naming. This also creates both Dev and Pros databases."
   type = list(object({
     name                = string
     data_retention_days = string
@@ -284,9 +284,9 @@ variable "snowflake_extra_databases" {
 ## warehouse variables ##
 #########################
 
-# This block features configuration setttings for warehouses.
-# The Granularity here is greater than for other configuratons, 
-# in order to suport any posible future use cases.
+# This block features configuration settings for warehouses.
+# The Granularity here is greater than for other configurations,
+# in order to support any possible future use cases.
 
 variable "snowflake_data_loader" {
   description = "Settings for warehouse that are used for the data ingestion process. "
@@ -331,7 +331,7 @@ variable "snowflake_dev_transformer" {
 
 
 variable "snowflake_extra_warehouses" {
-  description = "In the case one needs additional warehouses, these are configgured here. No naming automation is employed here."
+  description = "In the case one needs additional warehouses, these are configured here. No naming automation is employed here."
   type = list(object({
     name                  = string
     size                  = string
@@ -348,12 +348,12 @@ variable "snowflake_extra_warehouses" {
 
 
 #####################
-## Roles variabled ##
+## Roles variables ##
 #####################
 
 #   The wast majority of roles needed in the data platform creation is automated with this module.
-#   However there is reason to asume that there will be neccecary to create additional roles not
-#   covered by automation. Thus this block supports the creation of new roles that are not created automaticaly.
+#   However there is reason to assume that there will be necessary to create additional roles not
+#   covered by automation. Thus this block supports the creation of new roles that are not created automatically.
 
 variable "snowflake_schema_role_read" {
   description = "The creation of AR roles that contains the prefix denominating them as Schema only roles."
@@ -373,7 +373,7 @@ variable "snowflake_additional_roles" {
 ## SHARES ## 
 ############
 
-variable "snowfake_outgoing_share" {
+variable "snowflake_outgoing_share" {
   type = list(object({
     name              = string
     outgoing_accounts = list(string)

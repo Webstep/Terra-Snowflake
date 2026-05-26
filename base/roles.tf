@@ -83,7 +83,7 @@ resource "snowflake_account_role" "ar_schema_read" {
 
 resource "snowflake_account_role" "ar_db_outgoing_share_r" {
   provider = snowflake.securityadmin
-  for_each = { for share in var.snowfake_outgoing_share : share.name => share }
+  for_each = { for share in var.snowflake_outgoing_share : share.name => share }
   name     = "AR_DB_OUTGOING_SHARE_${each.value.name}_R"
 }
 
@@ -91,7 +91,7 @@ resource "snowflake_account_role" "ar_db_outgoing_share_r" {
 
 resource "snowflake_account_role" "ar_db_outgoing_share_w" {
   provider = snowflake.securityadmin
-  for_each = { for share in var.snowfake_outgoing_share : share.name => share }
+  for_each = { for share in var.snowflake_outgoing_share : share.name => share }
   name     = "AR_DB_OUTGOING_SHARE_${each.value.name}_W"
 }
 #############################

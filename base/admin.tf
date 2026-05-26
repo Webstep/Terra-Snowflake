@@ -74,7 +74,7 @@ resource "snowflake_warehouse" "sys_warehouse" {
   max_cluster_count     = 2
   min_cluster_count     = 1
   max_concurrency_level = 1
-  #resource_monitor = "MONITOR_${var.project_name}"# Disabled due to currently requirring account adming for warehouse creation
+  #resource_monitor = "MONITOR_${var.project_name}"# Disabled due to currently recurring account admin for warehouse creation
   scaling_policy            = "ECONOMY"
   initially_suspended       = true
   warehouse_type            = "STANDARD"
