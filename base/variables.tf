@@ -175,6 +175,12 @@ variable "snowflake_aws_s3_integration_role" {
   default = ""
 }
 
+variable "snowflake_aws_s3_integration_external_id" {
+  description = "Optional external ID Snowflake uses when assuming the AWS role for S3 storage integration. If unset, Snowflake generates one."
+  type        = string
+  default     = null
+}
+
 variable "snowflake_powerbi_oauth" {
   description = "whether to enable external oauth for PowerBi"
   type        = bool

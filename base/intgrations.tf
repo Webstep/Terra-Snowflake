@@ -57,4 +57,5 @@ resource "snowflake_storage_integration" "s3_integration" {
   enabled                   = true
   storage_provider          = "S3"
   storage_aws_role_arn      = var.snowflake_aws_s3_integration_role
+  storage_aws_external_id   = var.snowflake_aws_s3_integration_external_id
 }
