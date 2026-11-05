@@ -62,6 +62,28 @@ resource "snowflake_grant_privileges_to_account_role" "execute_task_grant" {
   account_role_name = "SYSADMIN"
   on_account        = true
 }
+
+
+###############
+## SSO ROLES ##
+###############
+
+
+resource "snowflake_account_role" "AAD_PROVISIONER" {
+  provider = snowflake.useradmin
+  count    = var.snowflake_entra_sso_setup ? 1 : 0
+  name     = "AAD_PROVISIONER"
+}
+
+resource "snowflake_grant_account_role" "aad_admin" {
+  provider = snowflake.securityadmin
+  count    = var.snowflake_entra_sso_setup ? 1 : 0
+
+  role_name        = "ACCOUNTADMIN"  
+  parent_role_name = snowflake_account_role.AAD_PROVISIONER.name
+
+}
+
 ###############
 ## WAREHOUSE ##
 ###############

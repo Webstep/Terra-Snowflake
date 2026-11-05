@@ -46,6 +46,36 @@ resource "snowflake_saml2_integration" "OKTA_SSO" {
   saml2_snowflake_issuer_url          = var.snowflake_issuer_url
 }
 
+resource "snowflake_saml2_integration" "ENTRA_SSO" {
+
+  provider                            = snowflake.accountadmin
+  count                               = var.snowflake_entra_sso_setup ? 1 : 0
+
+  comment                             = "Terraform managed integration"
+  enabled                             = true
+  name                                = "SSO_ENTRA_INTEGRATION"
+  saml2_enable_sp_initiated           = true
+  saml2_force_authn                   = false
+  saml2_issuer                        = var.sso_idp_entity_id
+  saml2_provider                      = "CUSTOM"
+  saml2_sso_url                       = var.sso_url
+  saml2_x509_cert                     = var.saml2_x509_cert
+  saml2_sp_initiated_login_page_label = "ENTRA SSO"
+  saml2_snowflake_acs_url             = var.snowflake_acs_url
+  saml2_snowflake_issuer_url          = var.snowflake_issuer_url
+}
+
+resource "snowflake_scim_integration" "aad_scim" {
+  provider                            = snowflake.accountadmin
+  count                               = var.snowflake_entra_sso_setup ? 1 : 0
+
+  name           = "aad_provisioning"
+  enabled        = true
+  scim_client    = "AZURE"
+  run_as_role    = "AAD_PROVISIONER"
+  comment        = "Security integration for Entra SCIM"
+}
+
 
 resource "snowflake_storage_integration" "s3_integration" {
   provider                  = snowflake.accountadmin

@@ -70,6 +70,19 @@ variable "snowflake_okta_sso_setup" {
 
   default = false
 }
+
+variable "snowflake_entra_sso_setup" {
+  description = "set to true, if you are using EntraID as you IDP"
+  type        = bool
+
+  default = false
+}
+
+variable "allow_id_token" {
+  description = "Enable SSO ID token caching at the account level, allowing clients to reuse tokens instead of re-authenticating each session"
+  type        = bool
+  default     = false
+}
 variable "sso_idp_entity_id" {
   sensitive   = true
   description = "The string containing the IdP EntityID / Issuer."
@@ -161,6 +174,12 @@ variable "PERMIFROST_KEY" {
 }
 variable "snowflake_aws_s3_integration" {
   description = "Use a single database that acts as a presentation layer"
+  type        = bool
+
+  default = false
+}
+variable "snowflake_export_aws_s3_integration" {
+  description = "Use a single database for all exports against S3"
   type        = bool
 
   default = false
