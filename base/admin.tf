@@ -80,7 +80,7 @@ resource "snowflake_grant_account_role" "aad_admin" {
   count    = var.snowflake_entra_sso_setup ? 1 : 0
 
   role_name        = "ACCOUNTADMIN"  
-  parent_role_name = snowflake_account_role.AAD_PROVISIONER.name
+  parent_role_name = "AAD_PROVISIONER"
 
 }
 
