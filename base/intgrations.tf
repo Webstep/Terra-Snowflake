@@ -72,7 +72,7 @@ resource "snowflake_scim_integration" "aad_scim" {
   name           = "aad_provisioning"
   enabled        = true
   scim_client    = "AZURE"
-  run_as_role    = "AAD_PROVISIONER"
+  run_as_role    = "aad_provisioner"
   comment        = "Security integration for Entra SCIM"
 }
 
