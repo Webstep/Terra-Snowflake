@@ -61,8 +61,8 @@ resource "snowflake_saml2_integration" "ENTRA_SSO" {
   saml2_sso_url                       = var.sso_url
   saml2_x509_cert                     = var.saml2_x509_cert
   saml2_sp_initiated_login_page_label = "ENTRA SSO"
-  saml2_snowflake_acs_url             = var.snowflake_acs_url
-  saml2_snowflake_issuer_url          = var.snowflake_issuer_url
+  saml2_snowflake_acs_url             = trimspace(var.snowflake_acs_url)
+  saml2_snowflake_issuer_url          = trimspace(var.snowflake_issuer_url)
 }
 
 resource "snowflake_scim_integration" "aad_scim" {
