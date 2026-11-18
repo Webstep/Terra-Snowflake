@@ -435,3 +435,21 @@ variable "snowflake_custom_sysuser" {
     }))
    default =   []
 }
+
+
+variable "snowflake_streamlit_spcs_apps" {
+   description = "Streamlit apps hosted on Snowpark Container Services. Each app gets its own compute pool, image repository and service. Egress hosts are optional; an external access integration is only created when egress_hosts is non-empty."
+   type = list(object({
+     name              = string                # unique app name, used in resource names (STREAMLIT_<name>_...)
+     database          = string                # database for image repo, service and network rule
+     schema            = string                # schema for the same objects
+     image             = string                # image path inside repo: <image>:<tag>
+     instance_family   = string                # compute pool instance family, e.g. CPU_X64_XS
+     max_nodes         = optional(number, 1)
+     auto_suspend_secs = optional(number, 300)
+     query_warehouse   = string                # warehouse the service uses for queries
+     port              = optional(number, 8501)
+     egress_hosts      = optional(list(string), [])  # e.g. ["pypi.org:443"]
+   }))
+   default = []
+}
