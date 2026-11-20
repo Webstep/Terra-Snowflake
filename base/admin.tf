@@ -24,7 +24,7 @@ resource "snowflake_account_role" "ar_system_database_w" {
 
 resource "snowflake_account_role" "data_admin" {
   provider = snowflake.useradmin
-  count    = var.snowflake_sso_integration ? 0 : 1
+  count    = var.snowflake_admin_setup ? 1 : 0
   name     = "DATA_ADMIN"
 }
 
